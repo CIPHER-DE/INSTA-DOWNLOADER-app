@@ -84,7 +84,7 @@ import React, { useState } from 'react';
           }
         ],
         downloadButtonText: "Download Insta Reel Downloader App",
-        appDownloadLink: "#",
+        appDownloadLink: "https://www.mediafire.com/file/3a50h6e84zwr1pp/insta+Downloader.apk/file",
         themeColor: "purple"
       };
     
