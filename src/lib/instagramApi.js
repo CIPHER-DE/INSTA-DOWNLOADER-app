@@ -1,26 +1,70 @@
-export const API_BASE_URL = 'https://apis.davidcyriltech.my.id/instagram?url=';
+import { supabase } from '@/lib/supabaseClient';
 
-    export const fetchInstagramVideo = async (url) => {
-      try {
-        const response = await fetch(`${API_BASE_URL}${encodeURIComponent(url)}`);
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({ message: "An unknown error occurred while fetching." }));
-          throw new Error(errorData.message || `Failed to fetch video. Server responded with status: ${response.status}`);
-        }
-        const data = await response.json();
-    
-        if (data.success && data.downloadUrl) {
-          return data;
-        } else {
-          throw new Error(data.message || 'Could not retrieve download link. The API might not support this content or the URL is incorrect.');
-        }
-      } catch (err) {
-        let errorMessage = err.message || 'An unexpected error occurred. Please try again.';
-        if (errorMessage.toLowerCase().includes("failed to fetch")) {
-           errorMessage = "Network error. Could not connect to the download service. Please check your internet connection or try again later.";
-        } else if (errorMessage.includes("The API might not support this content")) {
-           errorMessage = "This Instagram link might not be a downloadable video, or it could be private/unavailable.";
-        }
-        throw new Error(errorMessage);
-      }
+const API_BASE_URL = "https://apis.davidcyriltech.my.id/instagram?url=";
+
+export const fetchInstagramVideo = async (url) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}${encodeURIComponent(url)}`);
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ message: "Network response was not ok." }));
+      throw new Error(errorData.message || `Failed to fetch video. Status: ${response.status}`);
+    }
+    const data = await response.json();
+    if (!data.success || !data.downloadUrl) {
+      throw new Error(data.message || "Video not found or API error.");
+    }
+
+    await logDownloadedVideo(url, data.filename, data.type);
+
+    return {
+      downloadUrl: data.downloadUrl,
+      filename: data.filename || `instagram_video.${data.type || 'mp4'}`,
+      type: data.type || 'mp4',
+      creator: data.creator
     };
+  } catch (error) {
+    console.error("Error fetching Instagram video:", error);
+    throw new Error(error.message || "An unexpected error occurred while fetching the video.");
+  }
+};
+
+const logDownloadedVideo = async (videoUrl, videoTitle, videoType) => {
+  try {
+    const { data: existingVideo, error: selectError } = await supabase
+      .from('downloaded_videos')
+      .select('id, download_count')
+      .eq('video_url', videoUrl)
+      .single();
+
+    if (selectError && selectError.code !== 'PGRST116') { 
+      console.error('Error checking for existing video:', selectError);
+      return; 
+    }
+
+    if (existingVideo) {
+      const { error: updateError } = await supabase
+        .from('downloaded_videos')
+        .update({ 
+          download_count: existingVideo.download_count + 1,
+          last_downloaded_at: new Date().toISOString() 
+        })
+        .eq('id', existingVideo.id);
+      if (updateError) {
+        console.error('Error updating download count:', updateError);
+      }
+    } else {
+      const { error: insertError } = await supabase
+        .from('downloaded_videos')
+        .insert({ 
+          video_url: videoUrl, 
+          video_title: videoTitle || 'Instagram Video',
+          last_downloaded_at: new Date().toISOString() 
+        });
+      if (insertError) {
+        console.error('Error inserting new video log:', insertError);
+      }
+    }
+  } catch (error) {
+    console.error('Error logging downloaded video:', error);
+  }
+};
