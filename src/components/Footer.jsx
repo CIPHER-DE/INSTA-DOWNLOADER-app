@@ -8,7 +8,7 @@ import React from 'react';
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="bg-slate-900/60 backdrop-blur-md text-gray-400 py-6 px-4 text-center border-t border-purple-500/30"
+          className="bg-slate-900/60 backdrop-blur-md text-slate-300 py-6 px-4 text-center border-t border-purple-500/30"
         >
           <div className="container mx-auto">
             <div className="flex items-center justify-center mb-2">
