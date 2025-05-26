@@ -39,7 +39,7 @@ import React, { useState } from 'react';
       };
 
       const activeLinkStyle = "text-purple-400 font-semibold";
-      const inactiveLinkStyle = "text-gray-300 hover:text-purple-400";
+      const inactiveLinkStyle = "text-slate-200 hover:text-purple-400";
 
       return (
         <nav className="sticky top-0 z-40 bg-slate-900/60 backdrop-blur-lg shadow-xl py-3 px-4 md:px-8 border-b border-purple-500/30">
@@ -63,7 +63,7 @@ import React, { useState } from 'react';
               ))}
             </div>
             <div className="md:hidden">
-              <Button onClick={toggleMenu} variant="ghost" size="icon" className="text-gray-300 hover:text-purple-400">
+              <Button onClick={toggleMenu} variant="ghost" size="icon" className="text-slate-200 hover:text-purple-400">
                 {isOpen ? <X size={28} /> : <Menu size={28} />}
               </Button>
             </div>
@@ -77,7 +77,7 @@ import React, { useState } from 'react';
                 exit="closed"
                 className="md:hidden fixed inset-0 bg-slate-900/95 backdrop-blur-xl p-8 space-y-6 z-50 flex flex-col items-center justify-center"
               >
-                <Button onClick={toggleMenu} variant="ghost" size="icon" className="text-gray-300 hover:text-purple-400 absolute top-6 right-6">
+                <Button onClick={toggleMenu} variant="ghost" size="icon" className="text-slate-200 hover:text-purple-400 absolute top-6 right-6">
                    <X size={32} />
                 </Button>
                 {navItems.map((item) => (
