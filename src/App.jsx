@@ -12,7 +12,7 @@ import React from 'react';
     function App() {
       return (
         <Router>
-          <div className="flex flex-col min-h-screen text-gray-100 relative overflow-hidden">
+          <div className="flex flex-col min-h-screen text-slate-50 relative overflow-hidden dark">
             <GalaxyBackground />
             <div className="relative z-10 flex flex-col flex-grow">
               <Navbar />
