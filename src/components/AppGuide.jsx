@@ -56,12 +56,12 @@ import React from 'react';
             <h2 className={`text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r ${baseTextGradient} mb-2`}>
               {title}
             </h2>
-            <p className="text-gray-400/90 mt-2 text-sm sm:text-base">
+            <p className="text-slate-300/90 mt-2 text-sm sm:text-base">
               {subtitle}
             </p>
           </div>
     
-          <div className="space-y-6 text-gray-300/90">
+          <div className="space-y-6 text-slate-200/90">
             {steps.map((step, index) => {
               const StepIcon = iconMap[step.icon] || FileText;
               return (
