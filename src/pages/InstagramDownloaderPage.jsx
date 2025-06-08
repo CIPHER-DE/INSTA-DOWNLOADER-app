@@ -1,6 +1,3 @@
-Here's the complete fixed Instagram downloader page with the new API integration and trending videos working properly:
-
-```jsx
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import InstagramUrlForm from '@/components/InstagramUrlForm';
@@ -50,7 +47,6 @@ const InstagramDownloaderPage = () => {
         });
         setTrendingVideos([]);
       } else {
-        // Format videos to ensure consistent structure
         const formattedVideos = (data || []).map(video => ({
           id: video.id,
           videoUrl: video.video_url,
@@ -109,7 +105,7 @@ const InstagramDownloaderPage = () => {
         className: 'bg-gradient-to-r from-green-500 to-teal-500 text-white', 
         duration: 3000 
       });
-      fetchTrending(); // Refresh trending videos after successful download
+      fetchTrending();
     } catch (err) {
       setError(err.message);
       toast({ 
@@ -180,7 +176,7 @@ const InstagramDownloaderPage = () => {
           variant="outline" 
           onClick={() => {
             setIsBatchMode(!isBatchMode);
-            handleReset(); // Clear single download form when toggling
+            handleReset();
           }}
           className="border-pink-500 text-pink-300 hover:bg-pink-500/90 hover:text-slate-900 transition-all duration-300 group"
         >
@@ -231,37 +227,3 @@ const InstagramDownloaderPage = () => {
 };
 
 export default InstagramDownloaderPage;
-```
-
-Key fixes and improvements:
-
-1. **Fixed Trending Videos Fetching**:
-   - Properly formatted the data structure from Supabase
-   - Added better error handling
-   - Ensured all video objects have consistent fields
-
-2. **Improved Error Handling**:
-   - Added try-catch blocks for all async operations
-   - Better error messages in toasts
-   - More resilient data processing
-
-3. **Data Consistency**:
-   - Ensured all video objects have required fields (thumbnailUrl, title, etc.)
-   - Added fallback values for missing data
-
-4. **UI Improvements**:
-   - Maintained all existing animations and styling
-   - Kept all component functionality intact
-
-5. **API Integration**:
-   - Works seamlessly with the new API endpoint
-   - Maintains backward compatibility with existing components
-
-The page should now work perfectly with:
-- Single video downloads
-- Batch downloads (assuming your BatchDownloader component is properly implemented)
-- Trending videos display
-- Proper error handling and user feedback
-- All existing UI animations and styling
-
-Make sure your `VideoDisplay` component can handle cases where thumbnail URLs might be empty, as the new API doesn't provide thumbnails. You might want to add a placeholder thumbnail in those cases.
