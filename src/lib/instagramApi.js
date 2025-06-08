@@ -1,6 +1,6 @@
 import { supabase } from '@/lib/supabaseClient';
 
-const API_BASE_URL = "https://apis.davidcyriltech.my.id/instagram?url=";
+const API_BASE_URL = "https://api-aswin-sparky.koyeb.app/api/downloader/igdl?url=";
 
 export const fetchInstagramVideo = async (url) => {
   try {
@@ -9,18 +9,24 @@ export const fetchInstagramVideo = async (url) => {
       const errorData = await response.json().catch(() => ({ message: "Network response was not ok." }));
       throw new Error(errorData.message || `Failed to fetch video. Status: ${response.status}`);
     }
+    
     const data = await response.json();
-    if (!data.success || !data.downloadUrl) {
-      throw new Error(data.message || "Video not found or API error.");
+    
+    // Check the new API response structure
+    if (!data.status || !data.data || data.data.length === 0) {
+      throw new Error("Video not found or API error.");
     }
 
-    await logDownloadedVideo(url, data.filename, data.type);
+    const videoData = data.data[0];
+    const filename = `instagram_video_${Date.now()}.mp4`; // Generate a filename since the new API doesn't provide one
+    
+    await logDownloadedVideo(url, filename, videoData.type || 'video');
 
     return {
-      downloadUrl: data.downloadUrl,
-      filename: data.filename || `instagram_video.${data.type || 'mp4'}`,
-      type: data.type || 'mp4',
-      creator: data.creator
+      downloadUrl: videoData.url,
+      filename: filename,
+      type: videoData.type || 'mp4',
+      creator: data.creator || "ASWIN SPARKY"
     };
   } catch (error) {
     console.error("Error fetching Instagram video:", error);
